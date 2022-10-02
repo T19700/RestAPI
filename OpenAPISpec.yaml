@@ -1,2 +1,56 @@
-{
-}
+openapi: 3.0.0
+info:
+  title: Cuppa Joes Coffee Shop
+  description: This API delivers the menu from the servers at Cuppa Joes to the mobile app requesting the menu
+  version: 1.6.4
+paths:
+  /users:
+    get:
+      summary: Returns a list of menu items.
+      description: This get only returns items in stock or available for purchase currently at Cuppa Joes.
+      parameters:
+        - name: storeNum
+          in: path
+          required: true
+          description: The number of the store menu they are looking at
+          schema:
+            type: integer
+            format: int64
+            minimum: 1
+      responses:
+        '200':    # status code
+          description: Array of items available
+          content:
+            application/json:
+              schema: 
+                type: array
+                items: 
+                  type: string
+        '401':    # error code
+          description: Error no items eligable in menu
+    post:
+      summary: Creates a new menu view.
+      description: Displays the menu from the get path to the user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+      responses:
+        '201':
+          description: Created menu view
+        '402': 
+          description: Error occured while creating menu view
+    delete:
+      summary: Deletes the menu view
+      description: Deletes the view for that specific connection and empties out menu item array
+      responses:
+        '202':
+          description: Delete menu view created in get
+        '404':
+          description: No menu exists to delete
+        '402':
+          description: Error occured while deleting menu
